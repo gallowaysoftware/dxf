@@ -21,6 +21,8 @@ if err := d.Save("plate.dxf"); err != nil {
 go get github.com/gallowaysoftware/dxf
 ```
 
+Requires Go 1.24 or later. CI runs the suite on 1.24, 1.26 and 1.27.
+
 ## Why
 
 Go has no maintained DXF writer. If you generate toolpaths, nested cut sheets or
@@ -111,6 +113,7 @@ asserts on structure, rather than matching strings:
   whole group-code pairs ending in `EOF`
 
 Coverage is above 99%. The fuzz target found the line-break bug described above.
+The suite runs under Go 1.24, 1.26 and 1.27.
 
 ```
 go test ./...

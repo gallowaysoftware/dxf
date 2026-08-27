@@ -12,13 +12,20 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        go: ['1.24', '1.25']
+        # 1.24 is the floor declared in go.mod, so it has to keep working.
+        # 1.26 and 1.27 are the releases Go currently supports.
+        go: ['1.24', '1.26', '1.27']
+    name: go ${{ matrix.go }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go }}
+          # Query the live version manifest: a just-released Go may not be in
+          # the runner's cached list yet.
+          check-latest: true
 
       - name: gofmt
         run: |
@@ -36,5 +43,13 @@ jobs:
       - name: coverage
         run: go tool cover -func=coverage.out | tail -1
 
+  fuzz:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27'
+          check-latest: true
       - name: fuzz smoke
-        run: go test -run '^$' -fuzz FuzzDrawingStaysWellFormed -fuzztime 30s ./...
+        run: go test -run '^$' -fuzz FuzzDrawingStaysWellFormed -fuzztime 60s ./...
