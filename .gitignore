@@ -1,0 +1,3 @@
+# Fuzzing corpus generated locally; the seed corpus lives in the test file.
+testdata/fuzz/
+coverage.out
